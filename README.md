@@ -8,13 +8,16 @@ PORT=5050
 ### Run in dev mode
 
 ```shell
+npm install
 npm run dev
 ```
 
 ```shell
 cd frontend
+npm install
 npm run dev
 ```
+Visit http://localhost:5173/
 
 ### Run this app locally
 
