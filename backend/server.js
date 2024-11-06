@@ -1,10 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
-
+import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 
 import productRoutes from "./routes/product.route.js";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -15,7 +16,10 @@ const __dirname = path.resolve();
 
 // allows us to accept JSON data in the req.body
 app.use(express.json());
+// allows us to parse cookies
+app.use(cookieParser);
 
+app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
 if (process.env.NODE_ENV === "production") {
