@@ -1,11 +1,11 @@
 import { OpenAI } from "openai";
 
 
-const openai = new OpenAI({
-  apiKey: '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', 
-});
 export const getFoodRecommendation = async (prompt) => {
   try {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
     // call GPT-4o-mini 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini", 

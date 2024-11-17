@@ -6,11 +6,13 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
+import FoodRecommendation from "./components/FoodRecommendationForm";
 
 function App() {
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
       <Navbar />
+      <FoodRecommendation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />

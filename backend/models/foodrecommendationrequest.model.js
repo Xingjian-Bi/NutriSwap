@@ -34,7 +34,7 @@ class FoodRecommendationRequest {
                 .messages({
                     'string.empty': 'Food choice cannot be empty',
                 }),
-            preferences: Joi.object().optional(), // Optional preferences field
+            preferences: Joi.string().optional(), // Optional preferences field
         });
     }
 
