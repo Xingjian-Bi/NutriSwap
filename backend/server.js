@@ -6,6 +6,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 
 import productRoutes from "./routes/product.route.js";
+import foodRecommendationRoute from "./routes/foodrecommendation.route.js";
 import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/foodrecommend", foodRecommendationRoute);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/frontend/dist")));
