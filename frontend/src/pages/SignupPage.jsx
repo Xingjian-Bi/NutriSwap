@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -21,6 +22,7 @@ const SignupPage = () => {
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.200");
   const toast = useToast();
+  const navigate = useNavigate();
 
   const { signup } = useAuthStore();
   const handleAddUser = async () => {
@@ -39,6 +41,7 @@ const SignupPage = () => {
         status: "success",
         isClosable: true,
       });
+      navigate("/");
     }
     setName("");
     setEmail("");

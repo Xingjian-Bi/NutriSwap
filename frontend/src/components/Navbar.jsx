@@ -5,7 +5,11 @@ import {
   HStack,
   Text,
   useColorMode,
+  useToast,
+  Box,
 } from "@chakra-ui/react";
+import React, { useEffect } from "react";
+import { useAuthStore } from "../store/auth";
 import { Link } from "react-router-dom";
 import { PlusSquareIcon } from "@chakra-ui/icons";
 import { IoMoon } from "react-icons/io5";
@@ -13,6 +17,27 @@ import { LuSun } from "react-icons/lu";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const { user, isAuthenticated, checkAuth, logout } = useAuthStore();
+  const toast = useToast();
+
+  const handleLogout = async () => {
+    const { success, message } = await logout();
+    if (!success) {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: message,
+        status: "success",
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Container maxW={"1140px"} px={4}>
@@ -37,19 +62,40 @@ const Navbar = () => {
         </Text>
 
         <HStack spacing={2} alignItems={"center"}>
-          <Link to={"/create"}>
-            <Button>
-              <PlusSquareIcon fontSize={20} />
-            </Button>
-          </Link>
+          {isAuthenticated && (
+            <Link to={"/create"}>
+              <Button>
+                <PlusSquareIcon fontSize={20} />
+              </Button>
+            </Link>
+          )}
+
+          <HStack spacing={2} alignItems={"center"}>
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile">
+                  <img
+                    src={user?.profilePicture || "/default-profile.png"} // ../../public/default-profile.png
+                    alt="Profile"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                      marginLeft: "1rem",
+                    }}
+                  />
+                </Link>
+                <Button onClick={handleLogout}>Logout</Button>
+              </>
+            ) : (
+              <Link to="/login">
+                <Button>Sign In</Button>
+              </Link>
+            )}
+          </HStack>
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? <IoMoon /> : <LuSun size="20" />}
           </Button>
-          <Link to={"/login"}>
-            <Button colorScheme="teal" variant="solid">
-              Log in
-            </Button>
-          </Link>
         </HStack>
       </Flex>
     </Container>
