@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -21,6 +22,7 @@ const LoginPage = () => {
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.200");
   const { login } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     const { success, message } = await login(email, password);
@@ -38,6 +40,7 @@ const LoginPage = () => {
         status: "success",
         isClosable: true,
       });
+      navigate("/");
     }
     setEmail("");
     setPassword("");

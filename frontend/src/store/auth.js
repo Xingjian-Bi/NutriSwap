@@ -63,7 +63,8 @@ export const useAuthStore = create((set) => ({
       if (!response.ok) throw new Error("Logout Error");
 
       set({ user: null, isAuthenticated: false });
-    } catch (error) {
+      return { success: true, message: response.message };
+    } catch (e) {
       console.log("error login:", e.message);
       return { success: false, message: e.message };
     }
@@ -82,7 +83,7 @@ export const useAuthStore = create((set) => ({
         isAuthenticated: true,
       });
       // maybe return something?
-    } catch (error) {
+    } catch (e) {
       console.log("error login:", e.message);
       return { success: false, message: e.message };
     }
