@@ -8,7 +8,6 @@ import { connectDB } from "./config/db.js";
 import productRoutes from "./routes/product.route.js";
 import foodRecommendationRoute from "./routes/foodrecommendation.route.js";
 import authRoutes from "./routes/auth.routes.js";
-import foodRecommendationRoute from "./routes/foodrecommendation.route.js";
 
 dotenv.config();
 

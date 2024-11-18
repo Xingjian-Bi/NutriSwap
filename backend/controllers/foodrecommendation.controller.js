@@ -36,3 +36,5 @@ const postRecommend = async (req, res) => {
     }
 };
 
+export default postRecommend;
+
