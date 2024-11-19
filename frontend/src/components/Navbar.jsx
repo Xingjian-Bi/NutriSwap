@@ -85,11 +85,20 @@ const Navbar = () => {
                     }}
                   />
                 </Link>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button
+                  colorScheme="cyan"
+                  variant="outline"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </>
             ) : (
               <Link to="/login">
-                <Button>Sign In</Button>
+                <Button colorScheme="cyan" variant="outline">
+                  Sign In
+                </Button>
+                {/* colorScheme="teal" variant="solid" */}
               </Link>
             )}
           </HStack>
