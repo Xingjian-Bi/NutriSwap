@@ -1,5 +1,22 @@
 import React, { useState } from "react";
-import "./FoodRecommendationForm.css";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  Textarea,
+  VStack,
+  Heading,
+  Alert,
+  AlertIcon,
+  List,
+  ListItem,
+  useColorModeValue,
+  useToast,
+} from "@chakra-ui/react";
+// import "./FoodRecommendationForm.css";
 
 const FoodRecommendation = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +27,9 @@ const FoodRecommendation = () => {
     preferences: "",
   });
   const [recommendation, setRecommendation] = useState(null);
+  const [error, setError] = useState("");
+  const bg = useColorModeValue("gray.50", "gray.800");
+  const toast = useToast();
 
   // convert empty strong preference into null object, avoid backend error
   const dataToSend = {
@@ -24,6 +44,26 @@ const FoodRecommendation = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Probobality not nessary but just for another safety
+    if (
+      !formData.goal ||
+      !formData.mealType ||
+      !formData.foodChoice ||
+      !formData.preferences
+    ) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+    toast({
+      title: "AI Analysis in Progress",
+      description:
+        "Analyzing your preferences and generating recommendations...",
+      status: "info",
+      duration: 2000,
+      isClosable: true,
+      position: "top",
+    });
+
     try {
       const response = await fetch("api/foodrecommend/recommend", {
         method: "POST",
@@ -33,79 +73,118 @@ const FoodRecommendation = () => {
 
       const data = await response.json();
       setRecommendation(data);
+      setError("");
     } catch (error) {
       console.error("Error fetching recommendation:", error);
     }
   };
 
   return (
-    <div className="recommendation-container">
-      <h1>Food Recommendation</h1>
+    <Box
+      p={8}
+      maxWidth="600px"
+      mx="auto"
+      borderWidth={1}
+      borderRadius="lg"
+      boxShadow="lg"
+      bg={bg}
+    >
+      <Heading as="h1" size="lg" mb={6} textAlign="center">
+        Food Recommendation
+      </Heading>
+      {error && (
+        <Alert status="error" mb={4}>
+          <AlertIcon />
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit}>
-        <label htmlFor="goal">Goal</label>
-        <select
-          id="goal"
-          name="goal"
-          value={formData.goal}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="">--Select Goal--</option>
-          <option value="lose_weight">Lose Weight</option>
-          <option value="maintain_weight">Maintain Weight</option>
-          <option value="gain_weight">Gain Weight</option>
-        </select>
+        <VStack spacing={4}>
+          <FormControl id="goal" isRequired>
+            <FormLabel>Goal</FormLabel>
+            <Select
+              name="goal"
+              value={formData.goal}
+              onChange={handleInputChange}
+              placeholder="--Select Goal--"
+            >
+              <option value="lose_weight">Lose Weight</option>
+              <option value="maintain_weight">Maintain Weight</option>
+              <option value="gain_weight">Gain Weight</option>
+            </Select>
+          </FormControl>
 
-        <label htmlFor="mealType">Meal Type</label>
-        <select
-          id="mealType"
-          name="mealType"
-          value={formData.mealType}
-          onChange={handleInputChange}
-          required
-        >
-          <option value="">--Select Meal Type--</option>
-          <option value="breakfast">Breakfast</option>
-          <option value="lunch">Lunch</option>
-          <option value="dinner">Dinner</option>
-          <option value="snack">Snack</option>
-        </select>
+          <FormControl id="mealType" isRequired>
+            <FormLabel>Meal Type</FormLabel>
+            <Select
+              name="mealType"
+              value={formData.mealType}
+              onChange={handleInputChange}
+              placeholder="--Select Meal Type--"
+            >
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </Select>
+          </FormControl>
 
-        <label htmlFor="foodChoice">Food Choice</label>
-        <input
-          type="text"
-          id="foodChoice"
-          name="foodChoice"
-          value={formData.foodChoice}
-          onChange={handleInputChange}
-          required
-        />
+          <FormControl id="foodChoice" isRequired>
+            <FormLabel>Food Choice</FormLabel>
+            <Input
+              type="text"
+              name="foodChoice"
+              value={formData.foodChoice}
+              onChange={handleInputChange}
+              placeholder="Enter your preferred food"
+            />
+          </FormControl>
 
-        <label htmlFor="preferences">Preferences</label>
-        <textarea
-          id="preferences"
-          name="preferences"
-          value={formData.preferences}
-          onChange={handleInputChange}
-        ></textarea>
+          <FormControl id="preferences" isRequired>
+            <FormLabel>Preferences</FormLabel>
+            <Textarea
+              name="preferences"
+              value={formData.preferences}
+              onChange={handleInputChange}
+              placeholder="Enter your preferences (e.g., low salt, gluten-free)"
+            />
+          </FormControl>
 
-        <button type="submit">Get Recommendation</button>
+          <Button type="submit" colorScheme="teal" width="full">
+            Get Recommendation
+          </Button>
+        </VStack>
       </form>
 
       {recommendation && (
-        <div className="recommendation-result">
-          <h2>Recommended Food: {recommendation.recommendedFood}</h2>
-          <p>{recommendation.message}</p>
-          <h3>Alternative Choices:</h3>
-          <ul>
-            {recommendation.alternativeChoices.map((choice, index) => (
-              <li key={index}>{choice}</li>
-            ))}
-          </ul>
-          <p>{recommendation.reasoning}</p>
-        </div>
+        <Box mt={8} p={4} borderWidth={1} borderRadius="lg" boxShadow="sm">
+          <Heading as="h2" size="md" mb={2} color="blue.500">
+            Recommended Food: {recommendation.recommendedFood}
+          </Heading>
+          <Box mb={4}>
+            <p>{recommendation.message}</p>
+          </Box>
+          <Heading as="h3" size="sm" mt={4} mb={2}>
+            Alternative Choices:
+          </Heading>
+          {Array.isArray(recommendation.alternativeChoices) &&
+          recommendation.alternativeChoices.length > 0 ? (
+            <List spacing={2} styleType="disc" pl={6}>
+              {recommendation.alternativeChoices.map((choice, index) => (
+                <ListItem key={index}>{choice}</ListItem>
+              ))}
+            </List>
+          ) : (
+            <Box as="p" fontStyle="italic" color="gray.500">
+              No alternative choices available.
+            </Box>
+          )}
+          <Box mt={4}>
+            <p>{recommendation.reasoning}</p>
+          </Box>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
