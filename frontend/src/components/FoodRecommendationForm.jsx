@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import './FoodRecommendationForm.css';
+import React, { useState } from "react";
+import "./FoodRecommendationForm.css";
 
 const FoodRecommendation = () => {
   const [formData, setFormData] = useState({
-    userId: '123',
-    goal: '',
-    mealType: '',
-    foodChoice: '',
-    preferences: '',
+    userId: "123",
+    goal: "",
+    mealType: "",
+    foodChoice: "",
+    preferences: "",
   });
   const [recommendation, setRecommendation] = useState(null);
 
   // convert empty strong preference into null object, avoid backend error
-  const dataToSend = { 
+  const dataToSend = {
     ...formData,
-    preferences: formData.preferences === '' ? {} : formData.preferences,
+    preferences: formData.preferences === "" ? {} : formData.preferences,
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,16 +25,16 @@ const FoodRecommendation = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5050/api/foodrecommend/recommend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("api/foodrecommend/recommend", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),
       });
 
       const data = await response.json();
       setRecommendation(data);
     } catch (error) {
-      console.error('Error fetching recommendation:', error);
+      console.error("Error fetching recommendation:", error);
     }
   };
 
