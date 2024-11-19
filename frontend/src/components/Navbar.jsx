@@ -11,7 +11,7 @@ import {
 import React, { useEffect } from "react";
 import { useAuthStore } from "../store/auth";
 import { Link } from "react-router-dom";
-import { PlusSquareIcon } from "@chakra-ui/icons";
+import { PlusSquareIcon, SearchIcon } from "@chakra-ui/icons";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 
@@ -69,7 +69,13 @@ const Navbar = () => {
               </Button>
             </Link>
           )}
-
+          {isAuthenticated && (
+            <Link to={"/recommend"}>
+              <Button>
+                <SearchIcon fontSize={20} />
+              </Button>
+            </Link>
+          )}
           <HStack spacing={2} alignItems={"center"}>
             {isAuthenticated ? (
               <>

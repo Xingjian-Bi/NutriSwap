@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useProductStore } from "../store/product";
 import { useState } from "react";
+import { useAuthStore } from "../store/auth";
 
 const ProductCard = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
@@ -34,6 +35,7 @@ const ProductCard = ({ product }) => {
   const { deleteProduct, updateProduct } = useProductStore();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isAuthenticated } = useAuthStore();
 
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
@@ -114,14 +116,20 @@ const ProductCard = ({ product }) => {
           </Text>
         </Box>
 
-        <HStack spacing={2}>
-          <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" />
-          <IconButton
-            icon={<DeleteIcon />}
-            onClick={() => handleDeleteProduct(product._id)}
-            colorScheme="red"
-          />
-        </HStack>
+        {isAuthenticated && (
+          <HStack spacing={2}>
+            <IconButton
+              icon={<EditIcon />}
+              onClick={onOpen}
+              colorScheme="blue"
+            />
+            <IconButton
+              icon={<DeleteIcon />}
+              onClick={() => handleDeleteProduct(product._id)}
+              colorScheme="red"
+            />
+          </HStack>
+        )}
       </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>

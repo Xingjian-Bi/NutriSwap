@@ -12,12 +12,12 @@ function App() {
   return (
     <Box minH={"100vh"} bg={useColorModeValue("gray.100", "gray.900")}>
       <Navbar />
-      <FoodRecommendation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/recommend" element={<FoodRecommendation />} />
       </Routes>
     </Box>
   );
