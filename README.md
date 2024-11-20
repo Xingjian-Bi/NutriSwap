@@ -1,7 +1,7 @@
 ### Setup .env file
 
 ```shell
-MONGO_URI=your_mongo_uri
+MONGO_URI="mongodb+srv://eburkesf:Luna!2012@nutriswap.y3wns.mongodb.net/?retryWrites=true&w=majority&appName=NutriSwap"
 PORT=5050
 ```
 

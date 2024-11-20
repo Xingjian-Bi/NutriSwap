@@ -61,3 +61,34 @@ export const deleteProduct = async (req, res) => {
 		res.status(500).json({ success: false, message: "Server Error" });
 	}
 };
+
+export const favoriteProduct = async (req, res) => {
+	const { id } = req.params;
+
+	if (!mongoose.Types.ObjectId.isValid(id)) {
+		return res.status(404).json({ success: false, message: "Invalid Product Id" });
+	}
+
+	try {
+		// Find the product by ID
+		const product = await Product.findById(id);
+
+		if (!product) {
+			return res.status(404).json({ success: false, message: "Product not found" });
+		}
+
+		// Toggle the "favorite" field
+		product.favorite = !product.favorite;
+
+		// Save the updated product
+		await product.save();
+
+		// Respond with appropriate message
+		const message = product.favorite ? "Product added to favorites!" : "Product removed from favorites!";
+
+		res.status(200).json({ success: true, message, product });
+	} catch (error) {
+		console.log("error in favoriting product:", error.message);
+		res.status(500).json({ success: false, message: "Server Error" });
+	}
+};
