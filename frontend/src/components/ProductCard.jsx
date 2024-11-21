@@ -89,8 +89,8 @@ const ProductCard = ({ product }) => {
         throw new Error("User is not logged in.");
       }
       const endpoint = isFavorite
-          ? "/favorites/remove" // Call remove endpoint if already a favorite
-          : "/favorites/add";   // Call add endpoint otherwise
+          ? "api/products/favorites/remove" // Call remove endpoint if already a favorite
+          : "api/products/favorites/add";   // Call add endpoint otherwise
 
       const response = await axios.post(endpoint, {
         userId: user._id,
