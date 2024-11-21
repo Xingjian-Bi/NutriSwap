@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isAuthenticated } = useAuthStore();
 
-  const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
+  const [isFavorite, setIsFavorite] = useState(user?.favorites?.includes(product._id) || false);
 
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
@@ -105,13 +105,13 @@ const ProductCard = ({ product }) => {
         setIsFavorite(!isFavorite); // Toggle favorite state
         toast({
           title: "Success",
-          description: response.data.message,
+          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } else {
-        throw new Error(response.data.message);
+        throw new Error(data.message);
       }
     } catch (error) {
       toast({
