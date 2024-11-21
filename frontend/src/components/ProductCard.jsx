@@ -25,7 +25,6 @@ import {
 import { useProductStore } from "../store/product";
 import { useState } from "react";
 import { useAuthStore } from "../store/auth";
-import {favoriteProduct} from "../../../backend/controllers/product.controller.js";
 
 const ProductCard = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
@@ -37,6 +36,8 @@ const ProductCard = ({ product }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isAuthenticated } = useAuthStore();
+
+  const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
 
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
@@ -81,22 +82,42 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleFavoriteProduct = async (pid) => {
-    const {success, message} = await favoriteProduct(pid);
-    onClose();
-    if (!success) {
+  const handleToggleFavorite = async (pid) => {
+    try {
+      const endpoint = isFavorite
+          ? "/favorites/remove" // Call remove endpoint if already a favorite
+          : "/favorites/add";   // Call add endpoint otherwise
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          productId: pid,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsFavorite(!isFavorite); // Toggle favorite state
+        toast({
+          title: "Success",
+          description: response.data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
       toast({
         title: "Error",
-        description: message,
+        description: error.message || "Something went wrong!",
         status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: message,
-        status: "success",
         duration: 3000,
         isClosable: true,
       });
@@ -127,6 +148,7 @@ const ProductCard = ({ product }) => {
           </Heading>
           <Text fontSize="xl" fontWeight="bold">
             ${product.price}
+            {isFavorite && <StarIcon color="yellow.400" />}
           </Text>
         </Box>
 
@@ -142,7 +164,7 @@ const ProductCard = ({ product }) => {
         <HStack spacing={2}>
           <IconButton
               icon={<StarIcon />}
-              onClick={() => handleFavoriteProduct(product._id)}
+              onClick={() => handleToggleFavorite(product._id)}
               colorScheme="yellow"
           />
           <IconButton icon={<EditIcon />} onClick={onOpen} colorScheme="blue" />

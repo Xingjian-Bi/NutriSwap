@@ -22,11 +22,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    favorite: {
-        type: Boolean,
-        required: true,
-        default: false,
-      }
   },
   {
     // Automaticly create createdAt, updatedAt field in db

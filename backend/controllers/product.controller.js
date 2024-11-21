@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
+import { User } from "../models/user.model.js";
 
 export const getProducts = async (req, res) => {
 	try {
@@ -62,33 +63,61 @@ export const deleteProduct = async (req, res) => {
 	}
 };
 
-export const favoriteProduct = async (req, res) => {
-	const { id } = req.params;
+export const addFavorite = async (req, res) => {
+	const { userId, productId } = req.body;
 
-	if (!mongoose.Types.ObjectId.isValid(id)) {
+	// Validate product ID
+	if (!mongoose.Types.ObjectId.isValid(productId)) {
 		return res.status(404).json({ success: false, message: "Invalid Product Id" });
 	}
 
 	try {
-		// Find the product by ID
-		const product = await Product.findById(id);
+		// Find the user
+		const user = await User.findById(userId);
 
-		if (!product) {
-			return res.status(404).json({ success: false, message: "Product not found" });
+		if (!user) {
+			return res.status(404).json({ success: false, message: "User not found" });
 		}
 
-		// Toggle the "favorite" field
-		product.favorite = !product.favorite;
+		// Check if the product is already a favorite
+		if (user.favorites.includes(productId)) {
+			return res.status(400).json({ success: false, message: "Product already in favorites" });
+		}
 
-		// Save the updated product
-		await product.save();
+		// Add product to favorites
+		user.favorites.push(productId);
+		await user.save();
 
-		// Respond with appropriate message
-		const message = product.favorite ? "Product added to favorites!" : "Product removed from favorites!";
-
-		res.status(200).json({ success: true, message, product });
+		res.status(200).json({ success: true, message: "Product added to favorites", favorites: user.favorites });
 	} catch (error) {
-		console.log("error in favoriting product:", error.message);
+		console.error("Error in adding favorite:", error.message);
+		res.status(500).json({ success: false, message: "Server Error" });
+	}
+};
+
+export const removeFavorite = async (req, res) => {
+	const { userId, productId } = req.body;
+
+	// Validate product ID
+	if (!mongoose.Types.ObjectId.isValid(productId)) {
+		return res.status(404).json({ success: false, message: "Invalid Product Id" });
+	}
+
+	try {
+		// Find the user
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return res.status(404).json({ success: false, message: "User not found" });
+		}
+
+		// Remove product from favorites
+		user.favorites = user.favorites.filter((id) => id.toString() !== productId);
+		await user.save();
+
+		res.status(200).json({ success: true, message: "Product removed from favorites", favorites: user.favorites });
+	} catch (error) {
+		console.error("Error in removing favorite:", error.message);
 		res.status(500).json({ success: false, message: "Server Error" });
 	}
 };
