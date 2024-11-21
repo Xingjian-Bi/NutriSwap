@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar";
 import FoodRecommendation from "./components/FoodRecommendationForm";
 import UserForm from "./components/UserForm";
+import FavoritesPage from "./pages/FavoritesPage";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/recommend" element={<FoodRecommendation />} />
         <Route path="/profile" element={<UserForm />} />
-
+          <Route path="/favorites" element={<FavoritesPage />} />
       </Routes>
     </Box>
   );
