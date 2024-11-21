@@ -35,7 +35,6 @@ export const getFoodRecommendation = async (prompt) => {
       );
     }
 
-    console.log("Recommendation received:", recommendation);
     return recommendation;
   } catch (error) {
     console.error("Error fetching food recommendation:", error.message);

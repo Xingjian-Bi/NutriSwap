@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development nodemon backend/server.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
     "start": "NODE_ENV=production node backend/server.js",
-    "test": "NODE_ENV=test mocha './backend/controllers/auth.controller.test.js' --timeout 10000",
+    "test": "NODE_ENV=test mocha './backend/controllers/**/*.test.js' --timeout 10000",
     "testdb": "NODE_ENV=test mocha './backend/models/user.model.test.js' --timeout 10000"
   },
   "type": "module",
