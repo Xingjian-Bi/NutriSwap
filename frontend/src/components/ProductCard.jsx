@@ -93,7 +93,7 @@ const ProductCard = ({ product }) => {
           : "/favorites/add";   // Call add endpoint otherwise
 
       const response = await axios.post(endpoint, {
-        userId: user._Id,
+        userId: user._id,
         productId: pid,
       });
 
