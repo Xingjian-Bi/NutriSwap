@@ -25,6 +25,7 @@ import {
 import { useProductStore } from "../store/product";
 import { useState } from "react";
 import { useAuthStore } from "../store/auth";
+import axios from "axios";
 
 const ProductCard = ({ product }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
@@ -35,7 +36,7 @@ const ProductCard = ({ product }) => {
   const { deleteProduct, updateProduct } = useProductStore();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
 
   const [isFavorite, setIsFavorite] = useState(user?.favorites?.includes(product._id) || false);
 
@@ -84,34 +85,29 @@ const ProductCard = ({ product }) => {
 
   const handleToggleFavorite = async (pid) => {
     try {
+      if (!user || !user._id) {
+        throw new Error("User is not logged in.");
+      }
       const endpoint = isFavorite
           ? "/favorites/remove" // Call remove endpoint if already a favorite
           : "/favorites/add";   // Call add endpoint otherwise
 
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          productId: pid,
-        }),
+      const response = await axios.post(endpoint, {
+        userId: user._Id,
+        productId: pid,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.data.success) {
         setIsFavorite(!isFavorite); // Toggle favorite state
         toast({
           title: "Success",
-          description: data.message,
+          description: response.data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } else {
-        throw new Error(data.message);
+        throw new Error(response.data.message);
       }
     } catch (error) {
       toast({
