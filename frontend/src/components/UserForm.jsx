@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { userFormValidationSchema } from "./validationSchemas";
+import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth"; // Import zustand store
+import { useToast } from "@chakra-ui/react";
 import "./UserForm.css";
 
 const UserForm = () => {
-  const { user, isAuthenticated } = useAuthStore(); // Get user info from zustand
+  const { user, isAuthenticated, checkAuth } = useAuthStore(); // Get user info from zustand
   const [loading, setLoading] = useState(true);
   const [profileExists, setProfileExists] = useState(false);
+  const navigate = useNavigate();
+  const toast = useToast();
 
   // Formik initialization
   const formik = useFormik({
@@ -35,11 +39,23 @@ const UserForm = () => {
         }
 
         const data = await response.json();
-        alert("Profile updated successfully!");
+        toast({
+          title: "Profile Updated",
+          description: "Your profile was updated successfully!",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
         console.log("Profile updated:", data);
       } catch (error) {
         console.error("Error updating profile:", error.message);
-        alert("Failed to update profile.");
+        toast({
+          title: "Profile Update Failed",
+          description: "An error occurred while updating your profile.",
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
       }
     },
   });
@@ -47,13 +63,25 @@ const UserForm = () => {
   // Fetch user profile
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!isAuthenticated || !user) return; // Ensure user is authenticated
+      const authResult = await checkAuth();
+      if (!authResult?.success) {
+        navigate("/"); // Redirect if not authenticated or user doesn't exist
+        return;
+      }
+
       try {
         const response = await fetch(`/api/profile/${user.email}`, {
           method: "GET",
         });
 
         if (!response.ok) {
+          toast({
+            title: response.status,
+            description: response.statusText,
+            status: "error",
+            duration: 2000,
+            isClosable: true,
+          });
           throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
 
@@ -63,6 +91,13 @@ const UserForm = () => {
           setProfileExists(true);
         }
       } catch (error) {
+        toast({
+          title: "Error fetching profile:",
+          description: error.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+        });
         console.error("Error fetching profile:", error.message);
       } finally {
         setLoading(false);
@@ -70,7 +105,7 @@ const UserForm = () => {
     };
 
     fetchProfile();
-  }, [user, isAuthenticated]); // Include user and isAuthenticated as dependencies
+  }, [user, isAuthenticated, checkAuth]); // Include user and isAuthenticated as dependencies
 
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator while fetching data

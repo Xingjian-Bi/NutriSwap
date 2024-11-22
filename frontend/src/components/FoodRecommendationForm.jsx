@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -16,6 +16,8 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/auth";
 // import "./FoodRecommendationForm.css";
 
 const FoodRecommendation = () => {
@@ -30,6 +32,17 @@ const FoodRecommendation = () => {
   const [error, setError] = useState("");
   const bg = useColorModeValue("gray.50", "gray.800");
   const toast = useToast();
+  const { checkAuth } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const authResult = await checkAuth();
+      if (!authResult?.success) {
+        navigate("/");
+      }
+    })();
+  }, [checkAuth]);
 
   // convert empty strong preference into null object, avoid backend error
   const dataToSend = {
@@ -73,10 +86,12 @@ const FoodRecommendation = () => {
       const data = await response.json();
 
       if (data.success) {
-        setRecommendation(data.data.recommendations); 
-        setError(""); 
+        setRecommendation(data.data.recommendations);
+        setError("");
       } else {
-        setError(data.message || "An error occurred while fetching recommendations.");
+        setError(
+          data.message || "An error occurred while fetching recommendations."
+        );
       }
     } catch (error) {
       console.error("Error fetching recommendation:", error);

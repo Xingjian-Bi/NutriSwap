@@ -22,6 +22,13 @@ const Navbar = () => {
   const { user, isAuthenticated, checkAuth, logout } = useAuthStore();
   const toast = useToast();
 
+  useEffect(() => {
+    const verifyAuth = async () => {
+      await checkAuth();
+    };
+    verifyAuth();
+  }, [checkAuth, isAuthenticated]);
+
   const handleLogout = async () => {
     const { success, message } = await logout();
     if (!success) {
@@ -38,6 +45,8 @@ const Navbar = () => {
         status: "success",
         isClosable: true,
       });
+
+      window.location.reload();
     }
   };
 
