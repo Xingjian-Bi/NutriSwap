@@ -18,6 +18,12 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    fat: {
+      type: Number,
+    },
+    carbs: {
+      type: Number,
+    },
     image: {
       type: String,
       required: true,
