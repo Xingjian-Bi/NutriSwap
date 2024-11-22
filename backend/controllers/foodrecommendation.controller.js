@@ -14,8 +14,9 @@ const postRecommend = async (req, res) => {
     const { error } = FoodRecommendationRequest.validate(req.body);
 
     if (error) {
-        console.log("user request is not valid, ", error)
+        // console.log("user request is not valid, ", error)
         return res.status(400).json({
+            success: false,
             message: 'Validation failed',
             details: error.details,
         });
@@ -23,16 +24,22 @@ const postRecommend = async (req, res) => {
 
     try {
         // successfully validate user input，get prompt
-        console.log('user input is valid, forward msg to AI', JSON.stringify(userData) + '\n')
+        // console.log('user input is valid, forward msg to AI', JSON.stringify(userData) + '\n')
         const prompt = generateFoodRecommendationPrompt(userData);
 
         // get food recommendation
         const recommendation = await getFoodRecommendation(prompt);
-        // return response
-        res.status(200).json(recommendation);
+        res.status(200).json({
+            success: true,
+            message: "Food recommendations generated successfully.",
+            data: { recommendations: recommendation }
+          });
     } catch (err) {
-        console.error('Error fetching recommendation:', err + '\n');
-        res.status(500).json({ message: 'Internal server error', error: err.message });
+        // console.error('Error fetching recommendation:', err + '\n');
+        res.status(500).json({ 
+            success: false,
+            message: 'Internal server error', 
+            error: err.message });
     }
 };
 

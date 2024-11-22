@@ -36,6 +36,12 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.listen(PORT, () => {
-  connectDB();
-  console.log("Server started at http://localhost:" + PORT);
+  if (process.env.NODE_ENV !== "test") {
+    connectDB();
+    console.log("Server started at http://localhost:" + PORT);
+  } else {
+    console.log("Server started in test mode, database connection skipped");
+  }
 });
+
+export { app };

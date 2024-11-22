@@ -70,12 +70,17 @@ const FoodRecommendation = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),
       });
-
       const data = await response.json();
-      setRecommendation(data);
-      setError("");
+
+      if (data.success) {
+        setRecommendation(data.data.recommendations); 
+        setError(""); 
+      } else {
+        setError(data.message || "An error occurred while fetching recommendations.");
+      }
     } catch (error) {
       console.error("Error fetching recommendation:", error);
+      setError("An error occurred while fetching recommendations.");
     }
   };
 
