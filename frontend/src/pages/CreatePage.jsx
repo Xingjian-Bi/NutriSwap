@@ -19,6 +19,8 @@ const CreatePage = () => {
     price: "",
     calories: "",
     protein: "",
+    carbs: "",
+    fat: "",
     image: "",
   });
   const toast = useToast();
@@ -109,6 +111,24 @@ const CreatePage = () => {
               value={newProduct.protein}
               onChange={(e) =>
                 setNewProduct({ ...newProduct, protein: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Carbs"
+              name="carbs"
+              type="number"
+              value={newProduct.carbs}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, carbs: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Fat"
+              name="fat"
+              type="number"
+              value={newProduct.fat}
+              onChange={(e) =>
+                setNewProduct({ ...newProduct, fat: e.target.value })
               }
             />
             <Input

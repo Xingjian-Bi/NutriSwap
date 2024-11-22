@@ -21,6 +21,7 @@ import {
   VStack,
   FormControl,
   FormLabel,
+  Grid,
 } from "@chakra-ui/react";
 import { useProductStore } from "../store/product";
 import { useState } from "react";
@@ -151,12 +152,32 @@ const ProductCard = ({ product }) => {
         </Box>
 
         <Box mb={4}>
-          <Text fontSize="xl" color={textColor} mb={1}>
-            {product.calories} calories
-          </Text>
-          <Text fontSize="xl" color={textColor}>
-            {product.protein}g protein
-          </Text>
+          <Grid
+            templateColumns="auto 1fr"
+            gap={2}
+            fontSize="xl"
+            color={textColor}
+            alignItems="start"
+          >
+            <Text fontWeight="bold">Calories:</Text>
+            <Text textAlign="right">{product.calories}</Text>
+
+            <Text fontWeight="bold">Protein:</Text>
+            <Text textAlign="right">{product.protein}g</Text>
+
+            {product.carbs && (
+              <>
+                <Text fontWeight="bold">Carbs:</Text>
+                <Text textAlign="right">{product.carbs}g</Text>
+              </>
+            )}
+            {product.fat && (
+              <>
+                <Text fontWeight="bold">Fat:</Text>
+                <Text textAlign="right">{product.fat}g</Text>
+              </>
+            )}
+          </Grid>
         </Box>
 
         {isAuthenticated && (
@@ -245,6 +266,37 @@ const ProductCard = ({ product }) => {
                     setUpdatedProduct({
                       ...updatedProduct,
                       protein: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Carbs</FormLabel>
+                <Input
+                  placeholder="Carbs"
+                  name="carbs"
+                  type="number"
+                  value={updatedProduct.carbs || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      carbs: e.target.value,
+                    })
+                  }
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Fat</FormLabel>
+                <Input
+                  placeholder="Fat"
+                  name="fat"
+                  type="number"
+                  value={updatedProduct.fat || ""}
+                  onChange={(e) =>
+                    setUpdatedProduct({
+                      ...updatedProduct,
+                      fat: e.target.value,
                     })
                   }
                 />
