@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Button,
   Container,
@@ -63,18 +64,22 @@ const Navbar = () => {
 
         <HStack spacing={2} alignItems={"center"}>
           {isAuthenticated && (
+              <>
             <Link to={"/create"}>
               <Button>
                 <PlusSquareIcon fontSize={20} />
               </Button>
             </Link>
-          )}
-          {isAuthenticated && (
+
             <Link to={"/recommend"}>
               <Button>
                 <SearchIcon fontSize={20} />
               </Button>
             </Link>
+            <Link to={"/favorites"}>
+              <Button colorScheme="yellow">Favorites</Button>
+            </Link>
+            </>
           )}
           <HStack spacing={2} alignItems={"center"}>
             {isAuthenticated ? (
