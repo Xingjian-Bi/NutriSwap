@@ -82,7 +82,7 @@ export const useAuthStore = create((set) => ({
         user: data.user,
         isAuthenticated: true,
       });
-      // maybe return something?
+      return { success: true, message: response.message };
     } catch (e) {
       console.log("error login:", e.message);
       return { success: false, message: e.message };

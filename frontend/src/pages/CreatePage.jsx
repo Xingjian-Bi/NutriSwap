@@ -8,8 +8,10 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useProductStore } from "../store/product";
+import { useAuthStore } from "../store/auth";
 
 const CreatePage = () => {
   const [newProduct, setNewProduct] = useState({
@@ -20,8 +22,18 @@ const CreatePage = () => {
     image: "",
   });
   const toast = useToast();
-
   const { createProduct } = useProductStore();
+  const { checkAuth } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    (async () => {
+      const authResult = await checkAuth();
+      if (!authResult?.success) {
+        navigate("/");
+      }
+    })();
+  }, [checkAuth]);
 
   const handleAddProduct = async () => {
     const { success, message } = await createProduct(newProduct);
