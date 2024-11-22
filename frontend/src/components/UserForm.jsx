@@ -24,7 +24,7 @@ const UserForm = () => {
     validationSchema: userFormValidationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch(`/api/profile/${user.email}`, {
+        const response = await fetch(`api/profile/${user.email}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
@@ -122,11 +122,7 @@ const UserForm = () => {
         {/* Age Field */}
         <div className="form-group">
           <label htmlFor="age">Age:</label>
-          <input
-            type="number"
-            id="age"
-            {...formik.getFieldProps("age")}
-          />
+          <input type="number" id="age" {...formik.getFieldProps("age")} />
           {formik.touched.age && formik.errors.age ? (
             <div className="error">{formik.errors.age}</div>
           ) : null}
