@@ -47,3 +47,11 @@
     background-color: #0056b3;
   }
   
+  button.edit {
+    background-color: #28a745; /* Green for edit */
+  }
+  
+  button.edit:hover {
+    background-color: #218838;
+  }
+  
