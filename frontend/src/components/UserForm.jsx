@@ -1,11 +1,15 @@
-import React from "react";
-import { useFormik } from "formik"; // Import useFormik hook
-import { userFormValidationSchema } from "./validationSchemas"; // Import validation schema
-import "./UserForm.css";   // Import CSS file for styling
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { userFormValidationSchema } from "./validationSchemas";
+import { useAuthStore } from "../store/auth"; // Import zustand store
+import "./UserForm.css";
 
-// Define the form component
 const UserForm = () => {
-  // Initialize Formik
+  const { user, isAuthenticated } = useAuthStore(); // Get user info from zustand
+  const [loading, setLoading] = useState(true);
+  const [profileExists, setProfileExists] = useState(false);
+
+  // Formik initialization
   const formik = useFormik({
     initialValues: {
       height: "",
@@ -17,15 +21,64 @@ const UserForm = () => {
       allergies: "",
       targetWeight: "",
     },
-    validationSchema: userFormValidationSchema, // Apply validation schema
-    onSubmit: (values) => {
-      console.log("Form Submitted with Values:", values);
+    validationSchema: userFormValidationSchema,
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(`/api/profile/${user.email}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        alert("Profile updated successfully!");
+        console.log("Profile updated:", data);
+      } catch (error) {
+        console.error("Error updating profile:", error.message);
+        alert("Failed to update profile.");
+      }
     },
   });
 
+  // Fetch user profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!isAuthenticated || !user) return; // Ensure user is authenticated
+      try {
+        const response = await fetch(`/api/profile/${user.email}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const { profile } = await response.json();
+        if (profile) {
+          formik.setValues(profile); // Set fetched profile data into Formik
+          setProfileExists(true);
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [user, isAuthenticated]); // Include user and isAuthenticated as dependencies
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading indicator while fetching data
+  }
+
   return (
     <div className="form-container">
-      <h1>Personal Information</h1>
+      <h1>{profileExists ? "Update Your Profile" : "Complete Your Profile"}</h1>
       <form onSubmit={formik.handleSubmit}>
         {/* Height Field */}
         <div className="form-group">
@@ -33,7 +86,7 @@ const UserForm = () => {
           <input
             type="number"
             id="height"
-            {...formik.getFieldProps("height")} // Connect Formik to the field
+            {...formik.getFieldProps("height")}
           />
           {formik.touched.height && formik.errors.height ? (
             <div className="error">{formik.errors.height}</div>
@@ -46,7 +99,7 @@ const UserForm = () => {
           <input
             type="number"
             id="weight"
-            {...formik.getFieldProps("weight")} // Connect Formik to the field
+            {...formik.getFieldProps("weight")}
           />
           {formik.touched.weight && formik.errors.weight ? (
             <div className="error">{formik.errors.weight}</div>
@@ -59,7 +112,7 @@ const UserForm = () => {
           <input
             type="number"
             id="bodyfat"
-            {...formik.getFieldProps("bodyfat")} // Connect Formik to the field
+            {...formik.getFieldProps("bodyfat")}
           />
           {formik.touched.bodyfat && formik.errors.bodyfat ? (
             <div className="error">{formik.errors.bodyfat}</div>
@@ -72,7 +125,7 @@ const UserForm = () => {
           <input
             type="number"
             id="age"
-            {...formik.getFieldProps("age")} // Connect Formik to the field
+            {...formik.getFieldProps("age")}
           />
           {formik.touched.age && formik.errors.age ? (
             <div className="error">{formik.errors.age}</div>
@@ -127,7 +180,9 @@ const UserForm = () => {
         </div>
 
         {/* Submit Button */}
-        <button type="submit">Submit</button>
+        <button type="submit">
+          {profileExists ? "Update Profile" : "Submit Profile"}
+        </button>
       </form>
     </div>
   );

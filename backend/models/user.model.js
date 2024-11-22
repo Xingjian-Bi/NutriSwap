@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+const userInfoSchema = new mongoose.Schema({
+  height: { type: Number },
+  weight: { type: Number },
+  bodyfat: { type: Number },
+  age: { type: Number },
+  gender: { type: String },
+  preferences: { type: String },
+  allergies: { type: String },
+  targetWeight: { type: Number },
+});
+
+
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -14,6 +26,10 @@ const userSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+    },
+    profile: {
+      type: userInfoSchema, // Embedding the userInfoSchema
+      default: {}, // Default to an empty object if not provided
     },
     lastLogin: {
       type: Date,
