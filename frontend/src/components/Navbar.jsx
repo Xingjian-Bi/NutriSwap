@@ -8,6 +8,7 @@ import {
   useColorMode,
   useToast,
   Box,
+  Image,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useAuthStore } from "../store/auth";
@@ -64,36 +65,35 @@ const Navbar = () => {
 
         <HStack spacing={2} alignItems={"center"}>
           {isAuthenticated && (
-              <>
-            <Link to={"/create"}>
-              <Button>
-                <PlusSquareIcon fontSize={20} />
-              </Button>
-            </Link>
+            <>
+              <Link to={"/create"}>
+                <Button>
+                  <PlusSquareIcon fontSize={20} />
+                </Button>
+              </Link>
 
-            <Link to={"/recommend"}>
-              <Button>
-                <SearchIcon fontSize={20} />
-              </Button>
-            </Link>
-            <Link to={"/favorites"}>
-              <Button colorScheme="yellow">Favorites</Button>
-            </Link>
+              <Link to={"/recommend"}>
+                <Button>
+                  <SearchIcon fontSize={20} />
+                </Button>
+              </Link>
+
+              <Link to={"/favorites"}>
+                <Button colorScheme="yellow">Favorites</Button>
+              </Link>
             </>
           )}
           <HStack spacing={2} alignItems={"center"}>
             {isAuthenticated ? (
               <>
-                <Link to="/profile">
-                  <img
-                    src={user?.profilePicture || "/default-profile.png"} // ../../public/default-profile.png
+                <Link to={"/profile"}>
+                  <Image
+                    src={user?.profilePicture || "/default-profile.png"}
                     alt="Profile"
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      marginLeft: "1rem",
-                    }}
+                    boxSize="50px"
+                    borderRadius="full"
+                    marginRight="3rem"
+                    // objectFit="cover"
                   />
                 </Link>
                 <Button
