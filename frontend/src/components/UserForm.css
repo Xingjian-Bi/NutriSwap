@@ -36,8 +36,8 @@
     width: 100%;
     padding: 10px;
     font-size: 18px;
-    color: white;
-    background-color: #007bff;
+    color: brown;
+    background-color: hsl(212, 15%, 81%);
     border: none;
     border-radius: 4px;
     cursor: pointer;

@@ -25,4 +25,20 @@ export const userFormValidationSchema = Yup.object({
     .required("Target weight is required")
     .min(20, "Target weight must be at least 20 kg")
     .max(500, "Target weight can't exceed 500 kg"),
+  fatIntake: Yup.number()
+    .required("Fat intake is required")
+    .min(0, "Fat intake must be at least 0g")
+    .max(200, "Fat intake one day shouldn't exceed 200g"),
+  carbIntake: Yup.number()
+    .required("Carb intake is required")
+    .min(0, "Carb intake must be at least 0g")
+    .max(500, "Carb intake one day shouldn't exceed 500g"),
+  proteinIntake: Yup.number()
+    .required("Protein intake is required")
+    .min(0, "Protein intake must be at least 0g")
+    .max(300, "Protein intake one day shouldn't exceed 300g"),
+  caloriesIntake: Yup.number()
+    .required("Calories intake is required")
+    .min(0, "Calories intake must be at least 0")
+    .max(10000, "Calories intake one day shouldn't exceed 10,000cal"),
 });
