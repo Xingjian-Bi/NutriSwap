@@ -28,14 +28,14 @@ export const getUserProfile = async (req, res) => {
 // Update user profile information
 export const updateUserInfo = async (req, res) => {
   const { email } = req.params;
-  const { height, weight, bodyfat, age, gender, preferences, allergies, targetWeight } = req.body;
+  const { height, weight, bodyfat, age, gender, preferences, allergies, targetWeight, fatIntake, carbIntake, proteinIntake, caloriesIntake } = req.body;
 
   try {
     // Update the profile of the user identified by email
     const updatedUser = await User.findOneAndUpdate(
       { email },
       {
-        profile: { height, weight, bodyfat, age, gender, preferences, allergies, targetWeight },
+        profile: { height, weight, bodyfat, age, gender, preferences, allergies, targetWeight, fatIntake, carbIntake, proteinIntake, caloriesIntake  },
       },
       { new: true }
     );

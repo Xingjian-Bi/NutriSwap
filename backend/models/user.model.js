@@ -9,6 +9,10 @@ const userInfoSchema = new mongoose.Schema({
   preferences: { type: String },
   allergies: { type: String },
   targetWeight: { type: Number },
+  fatIntake: { type:Number},
+  carbIntake: {type:Number},
+  proteinIntake:{type:Number},
+  caloriesIntake:{type:Number},
 });
 
 

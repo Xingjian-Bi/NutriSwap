@@ -20,6 +20,10 @@ const UserForm = () => {
       preferences: "",
       allergies: "",
       targetWeight: "",
+      fatIntake: "",
+      carbIntake: "",
+      proteinIntake:"",
+      caloriesIntake:"",
     },
     validationSchema: userFormValidationSchema,
     onSubmit: async (values) => {
@@ -178,6 +182,60 @@ const UserForm = () => {
             <div className="error">{formik.errors.targetWeight}</div>
           ) : null}
         </div>
+
+
+        {/* Fat Intake Field */}
+        <div className = "form-group">
+          <label htmlFor="fatIntake">Fat Intake(g):</label>
+          <input
+            type = "number"
+            id = "fatIntake"
+            {...formik.getFieldProps("fatIntake")}
+          />
+          {formik.touched.fatIntake && formik.errors.fatIntake ? (
+            <div className="error">{formik.errors.fatIntake}</div>
+          ) : null}
+        </div>
+
+        {/* Carb Intake Field */}
+        <div className = "form-group">
+          <label htmlFor="carbIntake">Carb Intake(g):</label>
+          <input
+            type = "number"
+            id = "carbIntake"
+            {...formik.getFieldProps("carbIntake")}
+          />
+          {formik.touched.carbIntake && formik.errors.carbIntake ? (
+            <div className="error">{formik.errors.carbIntake}</div>
+          ) : null}
+        </div>
+
+        {/* Protein Intake Field */}
+        <div className = "form-group">
+          <label htmlFor="proteinIntake">Protein Intake(g):</label>
+          <input
+            type = "number"
+            id = "proteinIntake"
+            {...formik.getFieldProps("proteinIntake")}
+          />
+          {formik.touched.proteinIntake && formik.errors.proteinIntake ? (
+            <div className="error">{formik.errors.proteinIntake}</div>
+          ) : null}
+        </div>
+
+        {/* Calories Intake Field */}
+        <div className = "form-group">
+          <label htmlFor="caloriesIntake">Calories Intake(cal):</label>
+          <input
+            type = "number"
+            id = "caloriesIntake"
+            {...formik.getFieldProps("caloriesIntake")}
+          />
+          {formik.touched.caloriesIntake && formik.errors.caloriesIntake ? (
+            <div className="error">{formik.errors.caloriesIntake}</div>
+          ) : null}
+        </div>
+
 
         {/* Submit Button */}
         <button type="submit">
