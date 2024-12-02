@@ -9,12 +9,11 @@ const userInfoSchema = new mongoose.Schema({
   preferences: { type: String },
   allergies: { type: String },
   targetWeight: { type: Number },
-  fatIntake: { type:Number},
-  carbIntake: {type:Number},
-  proteinIntake:{type:Number},
-  caloriesIntake:{type:Number},
+  fatIntake: { type: Number },
+  carbIntake: { type: Number },
+  proteinIntake: { type: Number },
+  caloriesIntake: { type: Number },
 });
-
 
 const userSchema = new mongoose.Schema(
   {
@@ -39,12 +38,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-      favorites: [
-          {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "Product",
-          },
-      ],
+    favorites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   { timestamps: true }
 );
