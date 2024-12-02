@@ -1,4 +1,9 @@
-import { DeleteIcon, EditIcon, StarIcon } from "@chakra-ui/icons";
+import {
+  DeleteIcon,
+  EditIcon,
+  StarIcon,
+  PlusSquareIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -28,7 +33,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/auth";
 import axios from "axios";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, onAddToSummary }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
@@ -42,6 +47,17 @@ const ProductCard = ({ product }) => {
   const [isFavorite, setIsFavorite] = useState(
     user?.favorites?.includes(product._id) || false
   );
+
+  const handleAddToSummary = () => {
+    onAddToSummary(product);
+    toast({
+      title: "Added to Nutrition Summary ",
+      description: `${product.name} has been added to the nutrition summary!`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
 
   const handleDeleteProduct = async (pid) => {
     const { success, message } = await deleteProduct(pid);
@@ -185,6 +201,11 @@ const ProductCard = ({ product }) => {
             <IconButton
               icon={<StarIcon />}
               onClick={() => handleToggleFavorite(product._id)}
+              colorScheme="yellow"
+            />
+            <IconButton
+              icon={<PlusSquareIcon />}
+              onClick={handleAddToSummary}
               colorScheme="yellow"
             />
             <IconButton

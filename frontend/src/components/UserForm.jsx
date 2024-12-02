@@ -12,6 +12,7 @@ const UserForm = () => {
   const [profileExists, setProfileExists] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+  // console.log("Form user email:", user.email);
 
   // Formik initialization
   const formik = useFormik({
@@ -26,8 +27,8 @@ const UserForm = () => {
       targetWeight: "",
       fatIntake: "",
       carbIntake: "",
-      proteinIntake:"",
-      caloriesIntake:"",
+      proteinIntake: "",
+      caloriesIntake: "",
     },
     validationSchema: userFormValidationSchema,
     onSubmit: async (values) => {
@@ -109,7 +110,7 @@ const UserForm = () => {
     };
 
     fetchProfile();
-  }, [user, isAuthenticated, checkAuth]); // Include user and isAuthenticated as dependencies
+  }, [checkAuth, isAuthenticated]); // Include user and isAuthenticated as dependencies
 
   if (loading) {
     return <div>Loading...</div>; // Show loading indicator while fetching data
@@ -214,13 +215,12 @@ const UserForm = () => {
           ) : null}
         </div>
 
-
         {/* Fat Intake Field */}
-        <div className = "form-group">
+        <div className="form-group">
           <label htmlFor="fatIntake">Fat Intake(g):</label>
           <input
-            type = "number"
-            id = "fatIntake"
+            type="number"
+            id="fatIntake"
             {...formik.getFieldProps("fatIntake")}
           />
           {formik.touched.fatIntake && formik.errors.fatIntake ? (
@@ -229,11 +229,11 @@ const UserForm = () => {
         </div>
 
         {/* Carb Intake Field */}
-        <div className = "form-group">
+        <div className="form-group">
           <label htmlFor="carbIntake">Carb Intake(g):</label>
           <input
-            type = "number"
-            id = "carbIntake"
+            type="number"
+            id="carbIntake"
             {...formik.getFieldProps("carbIntake")}
           />
           {formik.touched.carbIntake && formik.errors.carbIntake ? (
@@ -242,11 +242,11 @@ const UserForm = () => {
         </div>
 
         {/* Protein Intake Field */}
-        <div className = "form-group">
+        <div className="form-group">
           <label htmlFor="proteinIntake">Protein Intake(g):</label>
           <input
-            type = "number"
-            id = "proteinIntake"
+            type="number"
+            id="proteinIntake"
             {...formik.getFieldProps("proteinIntake")}
           />
           {formik.touched.proteinIntake && formik.errors.proteinIntake ? (
@@ -255,18 +255,17 @@ const UserForm = () => {
         </div>
 
         {/* Calories Intake Field */}
-        <div className = "form-group">
+        <div className="form-group">
           <label htmlFor="caloriesIntake">Calories Intake(cal):</label>
           <input
-            type = "number"
-            id = "caloriesIntake"
+            type="number"
+            id="caloriesIntake"
             {...formik.getFieldProps("caloriesIntake")}
           />
           {formik.touched.caloriesIntake && formik.errors.caloriesIntake ? (
             <div className="error">{formik.errors.caloriesIntake}</div>
           ) : null}
         </div>
-
 
         {/* Submit Button */}
         <button type="submit">
