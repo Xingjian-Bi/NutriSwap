@@ -55,7 +55,11 @@ const FavoritesPage = () => {
           w={"full"}
         >
           {favorites.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard
+              key={product._id}
+              product={product}
+              isFavoritePage={true}
+            />
           ))}
         </SimpleGrid>
 
