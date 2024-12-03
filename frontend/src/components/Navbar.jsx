@@ -101,7 +101,6 @@ const Navbar = () => {
                     alt="Profile"
                     boxSize="50px"
                     borderRadius="full"
-                    marginRight="3rem"
                     // objectFit="cover"
                   />
                 </Link>
