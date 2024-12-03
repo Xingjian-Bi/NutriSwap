@@ -33,7 +33,7 @@ import { useState } from "react";
 import { useAuthStore } from "../store/auth";
 import axios from "axios";
 
-const ProductCard = ({ product, onAddToSummary }) => {
+const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
   const [updatedProduct, setUpdatedProduct] = useState(product);
 
   const textColor = useColorModeValue("gray.600", "gray.200");
@@ -203,11 +203,13 @@ const ProductCard = ({ product, onAddToSummary }) => {
               onClick={() => handleToggleFavorite(product._id)}
               colorScheme="yellow"
             />
-            <IconButton
-              icon={<PlusSquareIcon />}
-              onClick={handleAddToSummary}
-              colorScheme="yellow"
-            />
+            {!isFavoritePage && (
+              <IconButton
+                icon={<PlusSquareIcon />}
+                onClick={handleAddToSummary}
+                colorScheme="yellow"
+              />
+            )}
             <IconButton
               icon={<EditIcon />}
               onClick={onOpen}

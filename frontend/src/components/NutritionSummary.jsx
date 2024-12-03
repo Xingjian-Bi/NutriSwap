@@ -1,5 +1,11 @@
 import React from "react";
-import { Box, HStack, Text, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Text,
+  IconButton,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { useAuthStore } from "../store/auth";
 
@@ -18,9 +24,13 @@ const NutritionSummary = ({ selectedItems, onReset }) => {
   const { user } = useAuthStore();
   const goals = user?.profile || {};
 
-  const getTextColor = (value, goal) => (value > goal ? "red.500" : "gray.700");
+  const getTextColor = (value, goal) =>
+    value > goal ? "red.500" : useColorModeValue("gray.700", "gray.300");
   const formatNumber = (number) =>
     Number.isInteger(number) ? number : number.toFixed(2);
+
+  const bgColor = useColorModeValue("gray.50", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
     <Box
@@ -28,7 +38,8 @@ const NutritionSummary = ({ selectedItems, onReset }) => {
       p={4}
       borderWidth="1px"
       borderRadius="lg"
-      bg="gray.50"
+      bg={bgColor}
+      borderColor={borderColor}
       shadow="md"
     >
       <HStack justifyContent="space-between" mb={4}>
