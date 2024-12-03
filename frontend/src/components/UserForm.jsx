@@ -25,6 +25,7 @@ const UserForm = () => {
   const [profileLoaded, setProfileLoaded] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+  // console.log("Form user email:", user.email);
 
   const textColor = useColorModeValue("gray.800", "gray.200");
   const bg = useColorModeValue("gray.50", "gray.800");
@@ -124,10 +125,12 @@ const UserForm = () => {
       }
     };
 
+
     if (user && !profileLoaded) {
       fetchProfile();
     }
   }, [user, checkAuth, navigate, toast, profileLoaded]);
+
 
   if (loading) {
     return (
@@ -158,6 +161,7 @@ const UserForm = () => {
         {profileExists ? "Update Your Profile" : "Complete Your Profile"}
       </Heading>
       <form onSubmit={formik.handleSubmit}>
+       
         <VStack spacing={4}>
           {[
             { id: "height", label: "Height (cm)", type: "number" },
