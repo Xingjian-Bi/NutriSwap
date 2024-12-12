@@ -161,12 +161,12 @@ const FoodRecommendation = () => {
           </FormControl>
 
           <FormControl id="preferences" isRequired>
-            <FormLabel>Preferences</FormLabel>
+            <FormLabel>Preferences or Allergens</FormLabel>
             <Textarea
               name="preferences"
               value={formData.preferences}
               onChange={handleInputChange}
-              placeholder="Enter your preferences (e.g., low salt, gluten-free)"
+              placeholder="Enter your preferences (e.g., I prefer low-carb meals, dislike spicy food, and avoid peanuts due to allergies.’)"
             />
           </FormControl>
 
