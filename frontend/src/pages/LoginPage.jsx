@@ -85,9 +85,15 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
+          <Text textAlign="left">
+            <Link color="teal.500" href="/forgot-password">
+              Forgot password?
+            </Link>
+          </Text>
           <Button colorScheme="teal" onClick={handleLogin} size="lg" w="full">
             Log In
           </Button>
+
           <Text textAlign="center">
             Don’t have an account?{" "}
             <Link color="teal.500" href="/signup">

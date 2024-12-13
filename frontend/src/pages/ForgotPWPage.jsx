@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useAuthStore } from "../store/auth";
 import {
   Box,
   Button,
@@ -13,39 +11,37 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/auth";
 
-const SignupPage = () => {
-  const [name, setName] = useState("");
+const ForgotPWPage = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const toast = useToast();
   const bg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.200");
-  const toast = useToast();
+  const { forgotPassword } = useAuthStore();
   const navigate = useNavigate();
 
-  const { signup } = useAuthStore();
-  const handleAddUser = async () => {
-    const { success, message } = await signup(email, password, name);
-    if (!success) {
+  const handleResetPassword = async () => {
+    const { success, message } = await forgotPassword(email);
+    if (success) {
+      toast({
+        title: "Reset link sent!",
+        description: "Check your email for the password reset link.",
+        status: "success",
+        isClosable: true,
+      });
+      setEmail("");
+      //   navigate("/");
+    } else {
       toast({
         title: "Error",
         description: message,
         status: "error",
         isClosable: true,
       });
-    } else {
-      toast({
-        title: "Success",
-        description: message,
-        status: "success",
-        isClosable: true,
-      });
-      navigate("/verify-email");
     }
-    setName("");
-    setEmail("");
-    setPassword("");
   };
 
   return (
@@ -66,40 +62,28 @@ const SignupPage = () => {
         boxShadow="lg"
       >
         <Heading as="h2" size="lg" textAlign="center" mb={6}>
-          Create Account
+          Forgot Password
         </Heading>
         <Stack spacing={4}>
-          <FormControl id="full-name" isRequired>
-            <FormLabel>Full Name</FormLabel>
-            <Input
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </FormControl>
           <FormControl id="email" isRequired>
             <FormLabel>Email Address</FormLabel>
             <Input
               type="email"
-              placeholder="Email Address"
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </FormControl>
-          <FormControl id="password" isRequired>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </FormControl>
-          <Button colorScheme="teal" onClick={handleAddUser} size="lg" w="full">
-            Sign Up
+          <Button
+            colorScheme="teal"
+            onClick={handleResetPassword}
+            size="lg"
+            w="full"
+          >
+            Send Reset Link
           </Button>
           <Text textAlign="center">
-            Already have an account?{" "}
+            Remember your password?{" "}
             <Link color="teal.500" href="/login">
               Log in
             </Link>
@@ -110,4 +94,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default ForgotPWPage;
