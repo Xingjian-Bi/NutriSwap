@@ -2,7 +2,7 @@ import {
   DeleteIcon,
   EditIcon,
   StarIcon,
-  PlusSquareIcon,
+  PlusSquareIcon, ArrowUpIcon,
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -139,6 +139,42 @@ const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
     }
   };
 
+  const handleTogglePublished = async (pid) => {
+    try {
+      if (!user || !user._id) {
+        throw new Error("User is not logged in.");
+      }
+      const endpoint = product.isPublished
+          ? "api/products/publish/remove" // Call remove endpoint if already a favorite
+          : "api/products/publish/add"; // Call add endpoint otherwise
+
+      const response = await axios.post(endpoint, {
+        userId: user._id,
+        productId: pid,
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: response.data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message || "Something went wrong!",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Box
       shadow="lg"
@@ -210,6 +246,11 @@ const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
                 colorScheme="yellow"
               />
             )}
+            <IconButton
+                icon={<ArrowUpIcon />}
+                onClick={() => handleTogglePublished(product._id)}
+                colorScheme={product.isPublished ? "green" : "red"}
+            />
             <IconButton
               icon={<EditIcon />}
               onClick={onOpen}

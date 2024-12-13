@@ -57,12 +57,16 @@ const HomePage = () => {
           spacing={10}
           w={"full"}
         >
-          {products.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onAddToSummary={handleAddToSummary}
-            />
+          {products.filter(
+              (product) =>
+                  product.isPublished || product.creator === (isAuthenticated && checkAuth?._id)
+              )
+              .map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onAddToSummary={handleAddToSummary}
+                />
           ))}
         </SimpleGrid>
 

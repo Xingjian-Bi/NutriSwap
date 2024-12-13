@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import {User} from "./user.model.js";
 
 const productSchema = new mongoose.Schema(
   {
@@ -28,6 +29,13 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+      isPublished: {
+        type: Boolean,
+        default: false,
+    },
+      creator: {
+        type: String,
+      }
   },
   {
     // Automaticly create createdAt, updatedAt field in db

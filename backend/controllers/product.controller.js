@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
 import { User } from "../models/user.model.js";
+import {useAuthStore} from "../../frontend/src/store/auth.js";
 
 export const getProducts = async (req, res) => {
 	try {
@@ -14,6 +15,13 @@ export const getProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
 	const product = req.body; // user will send this data
+	const { user, checkAuth } = useAuthStore();
+
+	if (!checkAuth) {
+		return res.status(401).json({ message: "You are not logged in" });
+	}
+
+	product.creator = user;
 
 	if (!product.name || !product.price || !product.image) {
 		return res.status(400).json({ success: false, message: "Please provide all fields" });
@@ -116,6 +124,62 @@ export const removeFavorite = async (req, res) => {
 		await user.save();
 
 		res.status(200).json({ success: true, message: "Product removed from favorites", favorites: user.favorites });
+	} catch (error) {
+		console.error("Error in removing favorite:", error.message);
+		res.status(500).json({ success: false, message: "Server Error" });
+	}
+};
+
+// Publish a product
+export const publishProduct = async (req, res) => {
+	const { userId, productId } = req.body;
+
+	// Validate product ID
+	if (!mongoose.Types.ObjectId.isValid(productId)) {
+		return res.status(404).json({ success: false, message: "Invalid Product Id" });
+	}
+
+	try {
+		// Find the user
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return res.status(404).json({ success: false, message: "User not found" });
+		}
+
+		// Change to published
+		user.isPublished = true;
+		await user.save();
+
+		res.status(200).json({ success: true, message: "Product published"});
+	} catch (error) {
+		console.error("Error in removing favorite:", error.message);
+		res.status(500).json({ success: false, message: "Server Error" });
+	}
+};
+
+// Unpublish a product
+export const unpublishProduct = async (req, res) => {
+	const { userId, productId } = req.body;
+
+	// Validate product ID
+	if (!mongoose.Types.ObjectId.isValid(productId)) {
+		return res.status(404).json({ success: false, message: "Invalid Product Id" });
+	}
+
+	try {
+		// Find the user
+		const user = await User.findById(userId);
+
+		if (!user) {
+			return res.status(404).json({ success: false, message: "User not found" });
+		}
+
+		// Change to unpublished
+		user.isPublished = false;
+		await user.save();
+
+		res.status(200).json({ success: true, message: "Product unpublished"});
 	} catch (error) {
 		console.error("Error in removing favorite:", error.message);
 		res.status(500).json({ success: false, message: "Server Error" });

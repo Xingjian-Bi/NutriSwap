@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/auth";
 import ProductCard from "../components/ProductCard";
 import axios from "axios";
+import {useProductStore} from "../store/product.js";
 
 const FavoritesPage = () => {
   const { user, checkAuth } = useAuthStore();
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
+  const { fetchProducts, products } = useProductStore();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -54,13 +56,16 @@ const FavoritesPage = () => {
           spacing={10}
           w={"full"}
         >
-          {favorites.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              isFavoritePage={true}
-            />
-          ))}
+          {products.filter(
+              (product) =>
+                  product.isPublished || product.creator === (checkAuth() && user?._id)
+          )
+              .map((product) => (
+                  <ProductCard
+                      key={product._id}
+                      product={product}
+                  />
+              ))}
         </SimpleGrid>
 
         {favorites.length === 0 && (
