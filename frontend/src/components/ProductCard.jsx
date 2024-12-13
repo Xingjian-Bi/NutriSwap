@@ -342,19 +342,21 @@ const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
               </FormControl>
 
               <FormControl>
-                {updatedProduct.isPrivate !== undefined && (
-                  <Checkbox
-                    isChecked={updatedProduct.isPrivate}
-                    onChange={(e) =>
-                      setUpdatedProduct({
-                        ...updatedProduct,
-                        isPrivate: e.target.checked,
-                      })
-                    }
-                  >
-                    Private
-                  </Checkbox>
-                )}
+                {user !== null &&
+                  updatedProduct.createdBy !== undefined &&
+                  updatedProduct.createdBy === user._id && (
+                    <Checkbox
+                      isChecked={updatedProduct.isPrivate}
+                      onChange={(e) =>
+                        setUpdatedProduct({
+                          ...updatedProduct,
+                          isPrivate: e.target.checked,
+                        })
+                      }
+                    >
+                      Private
+                    </Checkbox>
+                  )}
               </FormControl>
             </VStack>
           </ModalBody>
