@@ -27,6 +27,7 @@ import {
   FormControl,
   FormLabel,
   Grid,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useProductStore } from "../store/product";
 import { useState } from "react";
@@ -34,8 +35,8 @@ import { useAuthStore } from "../store/auth";
 import axios from "axios";
 
 const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
+  // console.log("Product card", product);
   const [updatedProduct, setUpdatedProduct] = useState(product);
-
   const textColor = useColorModeValue("gray.600", "gray.200");
   const bg = useColorModeValue("white", "gray.800");
 
@@ -338,6 +339,22 @@ const ProductCard = ({ product, onAddToSummary, isFavoritePage = false }) => {
                     })
                   }
                 />
+              </FormControl>
+
+              <FormControl>
+                {updatedProduct.isPrivate !== undefined && (
+                  <Checkbox
+                    isChecked={updatedProduct.isPrivate}
+                    onChange={(e) =>
+                      setUpdatedProduct({
+                        ...updatedProduct,
+                        isPrivate: e.target.checked,
+                      })
+                    }
+                  >
+                    Private
+                  </Checkbox>
+                )}
               </FormControl>
             </VStack>
           </ModalBody>
