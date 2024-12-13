@@ -28,6 +28,13 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isPrivate: {
+      type: Boolean,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     // Automaticly create createdAt, updatedAt field in db

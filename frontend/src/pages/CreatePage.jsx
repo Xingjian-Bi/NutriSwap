@@ -7,6 +7,9 @@ import {
   useColorModeValue,
   useToast,
   VStack,
+  HStack,
+  Text,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,10 +25,11 @@ const CreatePage = () => {
     carbs: "",
     fat: "",
     image: "",
+    isPrivate: true,
   });
   const toast = useToast();
   const { createProduct } = useProductStore();
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, user } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,7 +42,12 @@ const CreatePage = () => {
   }, [checkAuth]);
 
   const handleAddProduct = async () => {
-    const { success, message } = await createProduct(newProduct);
+    const productWithCreator = {
+      ...newProduct,
+      createdBy: user?._id,
+    };
+
+    const { success, message } = await createProduct(productWithCreator);
     if (!success) {
       toast({
         title: "Error",
@@ -59,7 +68,10 @@ const CreatePage = () => {
       price: "",
       calories: "",
       protein: "",
+      carbs: "",
+      fat: "",
       image: "",
+      isPrivate: true,
     });
   };
 
@@ -77,68 +89,99 @@ const CreatePage = () => {
           rounded={"lg"}
           shadow={"md"}
         >
-          <VStack spacing={4}>
-            <Input
-              placeholder="Product Name"
-              name="name"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Price"
-              name="price"
-              type="number"
-              value={newProduct.price}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, price: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Calories"
-              name="calories"
-              type="number"
-              value={newProduct.calories}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, calories: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Protein"
-              name="protein"
-              type="number"
-              value={newProduct.protein}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, protein: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Carbs"
-              name="carbs"
-              type="number"
-              value={newProduct.carbs}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, carbs: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Fat"
-              name="fat"
-              type="number"
-              value={newProduct.fat}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, fat: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Image URL"
-              name="image"
-              value={newProduct.image}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, image: e.target.value })
-              }
-            />
+          <VStack spacing={4} align="stretch">
+            <HStack>
+              <Text w="150px">Product Name</Text>
+              <Input
+                placeholder="Product Name"
+                name="name"
+                value={newProduct.name}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, name: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Price</Text>
+              <Input
+                placeholder="Price"
+                name="price"
+                type="number"
+                value={newProduct.price}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, price: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Calories</Text>
+              <Input
+                placeholder="Calories"
+                name="calories"
+                type="number"
+                value={newProduct.calories}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, calories: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Protein</Text>
+              <Input
+                placeholder="Protein"
+                name="protein"
+                type="number"
+                value={newProduct.protein}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, protein: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Carbs</Text>
+              <Input
+                placeholder="Carbs"
+                name="carbs"
+                type="number"
+                value={newProduct.carbs}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, carbs: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Fat</Text>
+              <Input
+                placeholder="Fat"
+                name="fat"
+                type="number"
+                value={newProduct.fat}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, fat: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="150px">Image URL</Text>
+              <Input
+                placeholder="Image URL"
+                name="image"
+                value={newProduct.image}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, image: e.target.value })
+                }
+              />
+            </HStack>
+            <HStack>
+              <Text w="95px">Private</Text>
+              <Checkbox
+                isChecked={newProduct.isPrivate}
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, isPrivate: e.target.checked })
+                }
+                pl="22px"
+              />
+            </HStack>
 
             <Button colorScheme="blue" onClick={handleAddProduct} w="full">
               Add Product
@@ -149,4 +192,5 @@ const CreatePage = () => {
     </Container>
   );
 };
+
 export default CreatePage;

@@ -9,7 +9,7 @@ import NutritionSummary from "../components/NutritionSummary";
 
 const HomePage = () => {
   const { fetchProducts, products } = useProductStore();
-  const { checkAuth, isAuthenticated } = useAuthStore();
+  const { checkAuth, isAuthenticated, user } = useAuthStore();
   const [selectedProducts, setSelectedProducts] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,6 @@ const HomePage = () => {
       fetchProducts();
     })();
   }, [checkAuth, fetchProducts]);
-  console.log("products", products);
 
   const handleAddToSummary = (product) => {
     setSelectedProducts((prev) => [...prev, product]);
@@ -27,6 +26,19 @@ const HomePage = () => {
   const handleResetSummary = () => {
     setSelectedProducts([]);
   };
+
+  console.log("Products", products);
+  // Treat null/undefined as public; Include products with no creator; Check if created by the current user; Include private products created by the user
+  const filteredProducts = products.filter((product) => {
+    const isPublic = product.isPrivate === false || product.isPrivate == null;
+    const noCreator = product.createdBy == null;
+    const isCreatedByUser = user && product.createdBy === user._id;
+    const isPrivateAndCreatedByUser =
+      product.isPrivate === true && isCreatedByUser;
+
+    return isPublic || noCreator || isPrivateAndCreatedByUser;
+  });
+  console.log("filteredProducts", filteredProducts);
 
   return (
     <Container maxW="container.xl" py={12}>
@@ -57,7 +69,7 @@ const HomePage = () => {
           spacing={10}
           w={"full"}
         >
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product._id}
               product={product}
@@ -66,7 +78,7 @@ const HomePage = () => {
           ))}
         </SimpleGrid>
 
-        {products.length === 0 && (
+        {filteredProducts.length === 0 && (
           <Text
             fontSize="xl"
             textAlign={"center"}
