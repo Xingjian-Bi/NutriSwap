@@ -37,7 +37,11 @@ export const signup = async (req, res) => {
     await user.save();
 
     generateTokenForLogin(res, user._id);
-    await sendVerificationEmail(user.email, verificationToken);
+
+    // Only send email in non-test environments
+    if (process.env.NODE_ENV !== "test") {
+      await sendVerificationEmail(user.email, verificationToken);
+    }
 
     res.status(201).json({
       success: true,
@@ -134,7 +138,10 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
 
-    await sendWelcomeEmail(user.email, user.name);
+    // Only send email in non-test environments
+    if (process.env.NODE_ENV !== "test") {
+      await sendWelcomeEmail(user.email, user.name);
+    }
 
     res.status(200).json({
       success: true,
@@ -169,10 +176,13 @@ export const forgotPassword = async (req, res) => {
 
     await user.save();
 
-    await sendPasswordResetEmail(
-      user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
-    );
+    // Only send email in non-test environments
+    if (process.env.NODE_ENV !== "test") {
+      await sendPasswordResetEmail(
+        user.email,
+        `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+      );
+    }
 
     res.status(200).json({
       success: true,
@@ -207,7 +217,10 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordExpiresAt = undefined;
     await user.save();
 
-    await sendResetSuccessEmail(user.email);
+    // Only send email in non-test environments
+    if (process.env.NODE_ENV !== "test") {
+      await sendResetSuccessEmail(user.email);
+    }
 
     res
       .status(200)
